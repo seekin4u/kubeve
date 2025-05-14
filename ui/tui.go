@@ -2,7 +2,7 @@ package ui
 
 import (
 	"github.com/rivo/tview"
-	"kubeve/kube"
+	"github.com/a0xAi/kubeve/kube"
 )
 
 func StartUI() {

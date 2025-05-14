@@ -1,6 +1,6 @@
 package main
 
-import "kubeve/ui"
+import "github.com/a0xAi/kubeve/ui"
 
 func main() {
 	ui.StartUI()
