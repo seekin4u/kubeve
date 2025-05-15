@@ -33,7 +33,7 @@ func NewHeader(
 			"[yellow]Namespace:[-] %s\n"+
 			"[yellow]K8s Rev:[-] %s\n"+
 			"[yellow]Kubeve Rev:[-] %s\n",
-		currentContext, clusterName, namespaceText, userName, kubeRev, "0.3.0",
+		clusterName, namespaceText, userName, kubeRev, "0.3.0",
 	))
 
 	// Recent namespace shortcuts pane
@@ -56,7 +56,8 @@ func NewHeader(
 		SetDynamicColors(true).
 		SetTextAlign(tview.AlignLeft)
 	shortcuts.SetBackgroundColor(0x000000)
-	shortcuts.SetText(`[blue]<ctrl+s>  [white]Toggle autoscroll
+	shortcuts.SetText(`[blue]</>       [white]Toggle filter
+[blue]<ctrl+s>  [white]Toggle autoscroll
 [blue]<ctrl+b>  [white]Go to last event
 [blue]<ctrl+n>  [white]Change namespace
 [blue]<↑↓>      [white]Scroll`)

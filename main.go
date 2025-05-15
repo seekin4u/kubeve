@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	version := "0.3.2"
+	version := "0.3.3"
 	namespace := flag.String("n", "", "Kubernetes namespace to use")
 	flag.Parse()
 	ui.StartUI(version, *namespace)
