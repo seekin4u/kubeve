@@ -14,13 +14,16 @@ builds:
       - linux
       - windows
       - darwin
+
 brews:
   - name: kubeve
+    directory: Formula
     homepage: "https://github.com/a0xAi/kubeve"
-    directory: Formula 
     repository:
       owner: a0xAi
       name: kubeve
+      branch: main
+      token: "{{ .Env.GITHUB_TOKEN }}"
 
 archives:
   - formats: [tar.gz]
