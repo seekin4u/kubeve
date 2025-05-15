@@ -21,7 +21,7 @@ brews:
     homepage: "https://github.com/a0xAi/kubeve"
     repository:
       owner: a0xAi
-      name: kubeve
+      name: homebrew-kubeve
       branch: main
       token: "{{ .Env.GITHUB_TOKEN }}"
 
