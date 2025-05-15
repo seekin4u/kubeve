@@ -6,3 +6,5 @@
 ## What is `kubeve`?
 
 **kubeve** is a tool to for reading Kubernetes events in human way<br/>
+
+![kubeve demo PNG](img/kubeve.png)
