@@ -22,7 +22,10 @@ builds:
       - linux
       - windows
       - darwin
-
+brew:
+  repo: a0xAi/kubeve
+  folder: Formula
+  git_remote: https://github.com/a0xAi/kubeve.git
 archives:
   - formats: [tar.gz]
     # this name template makes the OS and Arch compatible with the results of `uname`.
