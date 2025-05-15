@@ -185,16 +185,7 @@ func StartUI(version string, overrideNamespace string) {
 			table.Clear()
 			// header row
 			renderTableHeader(table, showTimestampColumn, showNamespaceColumn, showStatusColumn, showActionColumn, showResourceColumn)
-			row := 1
-			for _, line := range allEvents {
-				if strings.Contains(line, filterText) {
-					parts := strings.SplitN(line, "│", 6)
-					if len(parts) == 6 {
-						renderRow(table, row, parts, showTimestampColumn, showNamespaceColumn, showStatusColumn, showActionColumn, showResourceColumn)
-						row++
-					}
-				}
-			}
+			renderTableContent(table, allEvents, filterText, showTimestampColumn, showNamespaceColumn, showStatusColumn, showActionColumn, showResourceColumn)
 			app.SetFocus(table)
 		}
 	})
@@ -257,46 +248,19 @@ func StartUI(version string, overrideNamespace string) {
 			showTimestampColumn = !showTimestampColumn
 			table.Clear()
 			renderTableHeader(table, showTimestampColumn, showNamespaceColumn, showStatusColumn, showActionColumn, showResourceColumn)
-			row := 1
-			for _, line := range allEvents {
-				if strings.Contains(line, filterText) {
-					parts := strings.SplitN(line, "│", 6)
-					if len(parts) == 6 {
-						renderRow(table, row, parts, showTimestampColumn, showNamespaceColumn, showStatusColumn, showActionColumn, showResourceColumn)
-						row++
-					}
-				}
-			}
+			renderTableContent(table, allEvents, filterText, showTimestampColumn, showNamespaceColumn, showStatusColumn, showActionColumn, showResourceColumn)
 			return nil
 		case event.Rune() == 'A':
 			showActionColumn = !showActionColumn
 			table.Clear()
 			renderTableHeader(table, showTimestampColumn, showNamespaceColumn, showStatusColumn, showActionColumn, showResourceColumn)
-			row := 1
-			for _, line := range allEvents {
-				if strings.Contains(line, filterText) {
-					parts := strings.SplitN(line, "│", 6)
-					if len(parts) == 6 {
-						renderRow(table, row, parts, showTimestampColumn, showNamespaceColumn, showStatusColumn, showActionColumn, showResourceColumn)
-						row++
-					}
-				}
-			}
+			renderTableContent(table, allEvents, filterText, showTimestampColumn, showNamespaceColumn, showStatusColumn, showActionColumn, showResourceColumn)
 			return nil
 		case event.Rune() == 'R':
 			showResourceColumn = !showResourceColumn
 			table.Clear()
 			renderTableHeader(table, showTimestampColumn, showNamespaceColumn, showStatusColumn, showActionColumn, showResourceColumn)
-			row := 1
-			for _, line := range allEvents {
-				if strings.Contains(line, filterText) {
-					parts := strings.SplitN(line, "│", 6)
-					if len(parts) == 6 {
-						renderRow(table, row, parts, showTimestampColumn, showNamespaceColumn, showStatusColumn, showActionColumn, showResourceColumn)
-						row++
-					}
-				}
-			}
+			renderTableContent(table, allEvents, filterText, showTimestampColumn, showNamespaceColumn, showStatusColumn, showActionColumn, showResourceColumn)
 			return nil
 		case event.Rune() == 'q', event.Key() == tcell.KeyCtrlC:
 			app.Stop()
@@ -446,6 +410,19 @@ func renderRow(table *tview.Table, row int, parts []string, showTimestampColumn 
 		col++
 	}
 	table.SetCell(row, col, tview.NewTableCell(strings.TrimSpace(parts[5])).SetExpansion(5))
+}
+
+func renderTableContent(table *tview.Table, events []string, filterText string, showTimestampColumn bool, showNamespaceColumn bool, showStatusColumn bool, showActionColumn bool, showResourceColumn bool) {
+	row := 1
+	for _, line := range events {
+		if strings.Contains(line, filterText) {
+			parts := strings.SplitN(line, "│", 6)
+			if len(parts) == 6 {
+				renderRow(table, row, parts, showTimestampColumn, showNamespaceColumn, showStatusColumn, showActionColumn, showResourceColumn)
+				row++
+			}
+		}
+	}
 }
 
 // extractNamespace extracts the namespace from a resource string of the form "namespace/resource" or "Kind/Name"
