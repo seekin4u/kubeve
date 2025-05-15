@@ -1,7 +1,14 @@
 package main
 
-import "github.com/a0xAi/kubeve/ui"
+import (
+	"flag"
+
+	"github.com/a0xAi/kubeve/ui"
+)
 
 func main() {
-	ui.StartUI()
+	version := "0.3.1"
+	namespace := flag.String("n", "", "Kubernetes namespace to use")
+	flag.Parse()
+	ui.StartUI(version, *namespace)
 }
