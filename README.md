@@ -8,3 +8,8 @@
 **kubeve** is a tool to for reading Kubernetes events in human way<br/>
 
 ![kubeve demo PNG](img/kubeve.png)
+
+## Installation
+### Brew
+`brew tap a0xAi/kubeve`<br>
+`brew install kubeve`
