@@ -157,7 +157,7 @@ func StartUI(version string, overrideNamespace string) {
 				)
 				if autoScroll {
 					allEvents = append(allEvents, msg)
-					if strings.Contains(msg, filterText) &&
+					if strings.Contains(strings.ToLower(msg), strings.ToLower(filterText)) &&
 						(namespace == metav1.NamespaceAll || event.Namespace == currentNamespace) {
 						parts := strings.SplitN(msg, "│", 6)
 						if len(parts) == 6 {
