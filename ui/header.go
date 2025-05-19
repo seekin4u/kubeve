@@ -16,7 +16,7 @@ type Header struct {
 
 // NewHeader builds the top-bar with context info, shortcuts and ASCII logo.
 func NewHeader(
-	currentContext, clusterName, namespace, userName, kubeRev string,
+	clusterName, namespace, kubeRev string,
 	recentNamespaces []string,
 ) *Header {
 	// Context/info pane
@@ -33,7 +33,7 @@ func NewHeader(
 			"[yellow]Namespace:[-] %s\n"+
 			"[yellow]K8s Rev:[-] %s\n"+
 			"[yellow]Kubeve Rev:[-] %s\n",
-		clusterName, namespaceText, userName, kubeRev, "0.3.0",
+		clusterName, namespaceText, kubeRev, "0.3.0",
 	))
 
 	// Recent namespace shortcuts pane
@@ -56,33 +56,20 @@ func NewHeader(
 		SetDynamicColors(true).
 		SetTextAlign(tview.AlignLeft)
 	shortcuts.SetBackgroundColor(0x000000)
-	shortcuts.SetText(`[blue]</>       [white]Toggle filter
-[blue]<ctrl+s>  [white]Toggle autoscroll
-[blue]<ctrl+b>  [white]Go to last event
-[blue]<ctrl+n>  [white]Change namespace
-[blue]<↑↓>      [white]Scroll`)
+	shortcuts.SetText(ActionShortcuts())
 
 	shortcuts2 := tview.NewTextView().
 		SetDynamicColors(true).
 		SetTextAlign(tview.AlignLeft)
 	shortcuts2.SetBackgroundColor(0x000000)
-	shortcuts2.SetText(`[blue]<shift+t>  [white]Toggle timestamp
-[blue]<shift+r>  [white]Toggle resource
-[blue]<shift+a>  [white]Toggle action`)
-	// ASCII logo pane
-	logo := `__        ___.                      
-|  | ____ _\_ |__   [red]_______  __ ____ 
-[white]|  |/ /  |  \ __ \[red]_/ __ \  \/ // __ \
-[white]|    <|  |  / \_\ \  [red]___/\   /\  ___/
-[white]|__|_ \____/|___  /[red]\___  >\_/  \___ >
-     [white]\/         \/     [red]\/          \/ `
+	shortcuts2.SetText(ColumShortcuts())
+
 	logoView := tview.NewTextView().
 		SetDynamicColors(true).
 		SetTextAlign(tview.AlignRight)
 	logoView.SetBackgroundColor(0x000000)
-	logoView.SetText(logo)
+	logoView.SetText(LogoText())
 
-	// Put them side by side
 	headerFlex := tview.NewFlex().
 		AddItem(infoView, 0, 2, false).
 		AddItem(recentNs, 0, 1, false).
@@ -95,4 +82,41 @@ func NewHeader(
 		InfoView:    infoView,
 		RecentNSBox: recentNs,
 	}
+}
+
+func ActionShortcuts() string {
+	items := []struct{ key, desc string }{
+		{"</>", "Toggle filter"},
+		{"<ctrl+s>", "Toggle autoscroll"},
+		{"<ctrl+b>", "Go to last event"},
+		{"<ctrl+n>", "Change namespace"},
+		{"<↑↓>", "Scroll"},
+	}
+	var lines []string
+	for _, it := range items {
+		lines = append(lines, fmt.Sprintf("[blue]%s  [white]%s", it.key, it.desc))
+	}
+	return strings.Join(lines, "\n")
+}
+
+func ColumShortcuts() string {
+	items := []struct{ key, desc string }{
+		{"<shift+t>", "Toggle timestamp"},
+		{"<shift+r>", "Toggle resource"},
+		{"<shift+a>", "Toggle action"},
+	}
+	var lines []string
+	for _, it := range items {
+		lines = append(lines, fmt.Sprintf("[blue]%s\t[white]%s", it.key, it.desc))
+	}
+	return strings.Join(lines, "\n")
+}
+
+func LogoText() string {
+	return `__        ___.                      
+|  | ____ _\_ |__   [red]_______  __ ____ 
+[white]|  |/ /  |  \ __ \[red]_/ __ \  \/ // __ \
+[white]|    <|  |  / \_\ \  [red]___/\   /\  ___/
+[white]|__|_ \____/|___  /[red]\___  >\_/  \___ >
+     [white]\/         \/     [red]\/          \/ `
 }

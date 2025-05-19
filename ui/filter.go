@@ -5,14 +5,14 @@ import (
 	"github.com/rivo/tview"
 )
 
-// NewInputField returns a configured input field.
-// onDone is a callback when Enter or Esc is pressed.
-func NewFilter(onDone func(key tcell.Key)) *tview.InputField {
+func NewFilter() *tview.InputField {
 	filter := tview.NewInputField()
+	filter.SetLabelStyle(tcell.StyleDefault.
+		Foreground(tcell.ColorWhite).
+		Background(tcell.Color16))
+	filter.SetFieldStyle(tcell.StyleDefault.
+		Foreground(tcell.ColorWhite).
+		Background(tcell.Color16))
 	filter.SetLabel("> ")
-	filter.SetBorder(true)
-	filter.SetBorderColor(0x00FF00)
-	filter.SetBackgroundColor(0x000000)
-	filter.SetBorder(false) // hidden by default
 	return filter
 }
