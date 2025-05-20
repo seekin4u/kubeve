@@ -102,8 +102,9 @@ func ActionShortcuts() string {
 func ColumShortcuts() string {
 	items := []struct{ key, desc string }{
 		{"<shift+t>", "Toggle timestamp"},
-		{"<shift+r>", "Toggle resource"},
+		{"<shift+s>", "Toggle status"},
 		{"<shift+a>", "Toggle action"},
+		{"<shift+r>", "Toggle resource"},
 	}
 	var lines []string
 	for _, it := range items {

@@ -19,14 +19,14 @@ func NamespacesModal(app *tview.Application, frame *tview.Frame, table *tview.Ta
 
 	nsModal := tview.NewFlex().
 		SetDirection(tview.FlexRow).
-		AddItem(tview.NewBox(), 0, 1, false). // top spacer
+		AddItem(tview.NewBox(), 0, 1, false).
 		AddItem(
 			tview.NewFlex().
-				AddItem(tview.NewBox(), 0, 1, false). // left spacer
+				AddItem(tview.NewBox(), 0, 1, false).
 				AddItem(namespaceListView, 40, 0, true).
-				AddItem(tview.NewBox(), 0, 1, false), // right spacer
-							15, 0, true).
-		AddItem(tview.NewBox(), 0, 1, false) // bottom spacer
+				AddItem(tview.NewBox(), 0, 1, false),
+			15, 0, true).
+		AddItem(tview.NewBox(), 0, 1, false)
 
 	app.SetRoot(nsModal, true).SetFocus(namespaceListView)
 

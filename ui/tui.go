@@ -97,7 +97,13 @@ func StartUI(version string, overrideNamespace string) {
 		allEvents = nil
 		table.Clear()
 		showNamespaceColumn = namespace == metav1.NamespaceAll
-		renderTableHeader(table, showTimestampColumn, showNamespaceColumn, showStatusColumn, showActionColumn, showResourceColumn)
+		renderTableHeader(table, ColumnOptions{
+			Timestamp: showTimestampColumn,
+			Namespace: showNamespaceColumn,
+			Status:    showStatusColumn,
+			Action:    showActionColumn,
+			Resource:  showResourceColumn,
+		})
 
 		// go kube.WatchEvents(namespace, false, func(event *corev1.Event) {
 		go kube.WatchEvents(namespace, func(event *corev1.Event) {
@@ -118,7 +124,13 @@ func StartUI(version string, overrideNamespace string) {
 						parts := strings.SplitN(msg, "│", 6)
 						if len(parts) == 6 {
 							row := table.GetRowCount()
-							renderRow(table, row, parts, showTimestampColumn, showNamespaceColumn, showStatusColumn, showActionColumn, showResourceColumn)
+							renderRow(table, row, parts, ColumnOptions{
+								Timestamp: showTimestampColumn,
+								Namespace: showNamespaceColumn,
+								Status:    showStatusColumn,
+								Action:    showActionColumn,
+								Resource:  showResourceColumn,
+							})
 							table.ScrollToEnd()
 							table.Select(table.GetRowCount()-1, 0)
 						}
@@ -136,13 +148,25 @@ func StartUI(version string, overrideNamespace string) {
 		if key == tcell.KeyEnter {
 			filterText = filter.GetText()
 			table.Clear()
-			renderTableHeader(table, showTimestampColumn, showNamespaceColumn, showStatusColumn, showActionColumn, showResourceColumn)
-			renderTableContent(table, allEvents, filterText, showTimestampColumn, showNamespaceColumn, showStatusColumn, showActionColumn, showResourceColumn)
+			renderTableHeader(table, ColumnOptions{
+				Timestamp: showTimestampColumn,
+				Namespace: showNamespaceColumn,
+				Status:    showStatusColumn,
+				Action:    showActionColumn,
+				Resource:  showResourceColumn,
+			})
+			renderTableContent(table, allEvents, filterText, ColumnOptions{
+				Timestamp: showTimestampColumn,
+				Namespace: showNamespaceColumn,
+				Status:    showStatusColumn,
+				Action:    showActionColumn,
+				Resource:  showResourceColumn,
+			})
 			app.SetFocus(table)
 		}
 	})
 
-	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+	handleInput := func(event *tcell.EventKey) *tcell.EventKey {
 		switch {
 		case event.Key() == tcell.KeyCtrlS:
 			autoScroll = !autoScroll
@@ -165,31 +189,52 @@ func StartUI(version string, overrideNamespace string) {
 			return nil
 		case event.Rune() == 'T':
 			showTimestampColumn = !showTimestampColumn
-			table.Clear()
-			renderTableHeader(table, showTimestampColumn, showNamespaceColumn, showStatusColumn, showActionColumn, showResourceColumn)
-			renderTableContent(table, allEvents, filterText, showTimestampColumn, showNamespaceColumn, showStatusColumn, showActionColumn, showResourceColumn)
+			renderTable(table, allEvents, filterText, ColumnOptions{
+				Timestamp: showTimestampColumn,
+				Namespace: showNamespaceColumn,
+				Status:    showStatusColumn,
+				Action:    showActionColumn,
+				Resource:  showResourceColumn,
+			})
 			return nil
 		case event.Rune() == 'A':
 			showActionColumn = !showActionColumn
-			table.Clear()
-			renderTableHeader(table, showTimestampColumn, showNamespaceColumn, showStatusColumn, showActionColumn, showResourceColumn)
-			renderTableContent(table, allEvents, filterText, showTimestampColumn, showNamespaceColumn, showStatusColumn, showActionColumn, showResourceColumn)
+			renderTable(table, allEvents, filterText, ColumnOptions{
+				Timestamp: showTimestampColumn,
+				Namespace: showNamespaceColumn,
+				Status:    showStatusColumn,
+				Action:    showActionColumn,
+				Resource:  showResourceColumn,
+			})
+			return nil
+		case event.Rune() == 'S':
+			showStatusColumn = !showStatusColumn
+			renderTable(table, allEvents, filterText, ColumnOptions{
+				Timestamp: showTimestampColumn,
+				Namespace: showNamespaceColumn,
+				Status:    showStatusColumn,
+				Action:    showActionColumn,
+				Resource:  showResourceColumn,
+			})
 			return nil
 		case event.Rune() == 'R':
 			showResourceColumn = !showResourceColumn
-			table.Clear()
-			renderTableHeader(table, showTimestampColumn, showNamespaceColumn, showStatusColumn, showActionColumn, showResourceColumn)
-			renderTableContent(table, allEvents, filterText, showTimestampColumn, showNamespaceColumn, showStatusColumn, showActionColumn, showResourceColumn)
+			renderTable(table, allEvents, filterText, ColumnOptions{
+				Timestamp: showTimestampColumn,
+				Namespace: showNamespaceColumn,
+				Status:    showStatusColumn,
+				Action:    showActionColumn,
+				Resource:  showResourceColumn,
+			})
 			return nil
 		case event.Rune() == 'q', event.Key() == tcell.KeyCtrlC:
 			app.Stop()
 			return nil
 		default:
-			// Handle number key presses for namespace switching
 			if event.Rune() >= '0' && event.Rune() <= '3' {
 				switch event.Rune() {
 				case '0':
-					updateNamespace("") // all namespaces
+					updateNamespace("")
 				default:
 					idx := int(event.Rune() - '1')
 					if idx >= 0 && idx < len(recentNamespaces) {
@@ -200,7 +245,9 @@ func StartUI(version string, overrideNamespace string) {
 			}
 			return event
 		}
-	})
+	}
+
+	app.SetInputCapture(handleInput)
 	table.SetSelectedFunc(func(row int, column int) {
 		if row > 0 && row-1 < len(allEvents) {
 			parts := strings.SplitN(allEvents[row-1], "│", 6)
