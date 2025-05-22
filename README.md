@@ -17,6 +17,6 @@
 ### Manual Installation (macOS and Linux)
 - Download `kubeve` binary from releases..
 - Either:
-  - save them all to somewhere in your PATH,
+  - save it to somewhere in your PATH,
   - or save them to a directory, then create symlinks to `kubeve` from somewhere in your PATH, like /usr/local/bin
 - Make `kubeve` executable (chmod +x ...)
