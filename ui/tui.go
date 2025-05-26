@@ -111,7 +111,6 @@ func StartUI(version string, overrideNamespace string) {
 			Resource:  showResourceColumn,
 		})
 
-		// go kube.WatchEvents(namespace, false, func(event *corev1.Event) {
 		go kube.WatchEvents(namespace, func(event *corev1.Event) {
 			app.QueueUpdateDraw(func() {
 				resource := fmt.Sprintf("%s/%s", event.InvolvedObject.Kind, event.InvolvedObject.Name)
@@ -265,8 +264,11 @@ func StartUI(version string, overrideNamespace string) {
 
 	flex.AddItem(header.Flex, 7, 0, false).
 		AddItem(table, 0, 1, false).
-		AddItem(filterContainer, 1, 0, true)
-	if err := app.SetRoot(frame, true).Run(); err != nil {
+		AddItem(filterContainer, 1, 0, false)
+
+	app.SetRoot(frame, true)
+	app.SetFocus(table)
+	if err := app.Run(); err != nil {
 		panic(err)
 	}
 }
