@@ -105,6 +105,18 @@ func ColumShortcuts() string {
 		{"<shift+s>", "Toggle status"},
 		{"<shift+a>", "Toggle action"},
 		{"<shift+r>", "Toggle resource"},
+		{"<shift+c>", "Copy message"},
+	}
+	var lines []string
+	for _, it := range items {
+		lines = append(lines, fmt.Sprintf("[blue]%s\t[white]%s", it.key, it.desc))
+	}
+	return strings.Join(lines, "\n")
+}
+
+func ModalShortcuts() string {
+	items := []struct{ key, desc string }{
+		{"<shift+c>", "Copy message"},
 	}
 	var lines []string
 	for _, it := range items {

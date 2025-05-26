@@ -13,6 +13,7 @@ require (
 )
 
 require (
+	github.com/atotto/clipboard v0.1.4
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/emicklei/go-restful/v3 v3.11.0 // indirect
 	github.com/fxamacker/cbor/v2 v2.7.0 // indirect

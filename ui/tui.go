@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/a0xAi/kubeve/kube"
+	"github.com/atotto/clipboard"
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
 	corev1 "k8s.io/api/core/v1"
@@ -234,6 +235,18 @@ func StartUI(version string, overrideNamespace string) {
 			return nil
 		case event.Rune() == 'q', event.Key() == tcell.KeyCtrlC:
 			app.Stop()
+			return nil
+		case event.Rune() == 'C':
+			row, _ := table.GetSelection()
+			if row > 0 && row-1 < len(allEvents) {
+				parts := strings.SplitN(allEvents[row-1], "│", 6)
+				if len(parts) == 6 {
+					message := strings.TrimSpace(parts[5])
+					if err := clipboard.WriteAll(message); err != nil {
+						fmt.Fprintf(os.Stderr, "Failed to copy to clipboard: %v\n", err)
+					}
+				}
+			}
 			return nil
 		default:
 			if event.Rune() >= '0' && event.Rune() <= '3' {
