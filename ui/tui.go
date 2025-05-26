@@ -2,6 +2,7 @@ package ui
 
 import (
 	"fmt"
+	"os"
 	"strings"
 	"time"
 
@@ -20,7 +21,8 @@ func StartUI(version string, overrideNamespace string) {
 
 	namespace, rawConfig, kubeClient, namespaceList, err := kube.Kinit(overrideNamespace)
 	if err != nil {
-		panic(fmt.Errorf("failed to initialize Kubernetes: %w", err))
+		fmt.Fprintf(os.Stderr, "Error initializing Kubernetes: %v\n", err)
+		os.Exit(1)
 	}
 	currentContext := rawConfig.CurrentContext
 	ctxConfig := rawConfig.Contexts[currentContext]
@@ -32,7 +34,11 @@ func StartUI(version string, overrideNamespace string) {
 	showActionColumn := true
 	showResourceColumn := true
 
-	versionInfo, _ := kubeClient.Discovery().ServerVersion()
+	versionInfo, verErr := kubeClient.Discovery().ServerVersion()
+	if verErr != nil {
+		fmt.Fprintf(os.Stderr, "Error fetching server version: %v\n", verErr)
+		os.Exit(1)
+	}
 
 	app := tview.NewApplication()
 	app.SetBeforeDrawFunc(func(screen tcell.Screen) bool {
